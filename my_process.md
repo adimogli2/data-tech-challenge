@@ -1,0 +1,25 @@
+## My Process
+**My Approach:**
+I approached this challenge with a two-phase solution: Exploratory Data Analysis (EDA) to understand the data provided and find the patterns within the data. Following my analysis was Predictive Modeling to forecast future demand. I used Excel for my exploratory data analysis and Facebook's Prophet library for my time-series forecasting model.
+
+**Exploratory Data Analysis:**
+ - Data Cleaning
+	 - I didn't do much data cleaning. The only "cleaning" I did was stripping down some of the unncessary columns to make the exploratory data analysis easier, this included getting rid of the freight, mail, in-, and out- columns. I also got rid of the Month column as it was repetitive to have both that and Year, month_num in our data. Since I worked with pivot tables, missing values and 0s would show up as blank in my tables even if I did clean them. For the predictive model, I only had to ensure the data for the Sydney - Auckland route was clean as we were only predicting for this single route. Links to my cleaned data (the one used for EDA and the Sydney-Auckland Prophet data) can be found at the end of this file. 
+ - Route Traffic Analysis
+	 - Using pivot tables and conditional formatting in Excel helped me create a heat map to identify traffic patterns. This made it simple to identify the top three routes and least trafficked routes. Since we had a country field in the data, I was able to create a similar heat map for country level passenger traffic.
+ - Trends & Patterns
+	 - Beyond volume, the route optimization and investment objective required me to look at consistency and growth patterns within the data. I analyzed these through pivot tables and line charts as these continuous graphs show consistency based on how straight each line is and growth based on the slope of the lines. Through this visual, I was able to see the trade-off between volume and variability. Year over year analysis showed positive growth trends in top-performing countries while lower-trafficked destinations showed stagnant or even declining trends. Through further research and data analysis, I was able to recognize that international route profitability depends on both passenger and freight traffic.
+
+**Predictive Modeling with Prophet:**
+After testing a classic linear regression approach which yielded a 10% error rate, I research time-series specific modeling. While ARIMA/SARIMA approaches seemed suitable for the case, they required extensive data preprocessing, so I continued my search. This led me to Facebook's Prophet. I selected this Python library due to its streamlined implementation and built-in seasonality handling. 
+
+I prepared data for my model by reformatting to Prophet's structure. This included stripping our raw data down to just ds (date) and y (number of passengers) columns. My first run of Prophet yielded decent results, better than that of the linear regression approach, but there were other parameters to Prophet I could tweak for better results. It is important to note that I used the mean absolute error (MAE) to evalute my models. MAE is a metric that measures the average magnitude of prediction errors without considering direction. I chose to use MAE since it maintains the scale of our data and is easily interpretable.  I tried a different growth parameter (logistic instead of linear), different seasonality multiplicatives (strength of seasonal changes), and different change points (sudden shifts in our trends). In the end, only country holidays, seasonality prior scale, and custom seasonality mappings were effective, bringing our Prophet base model MAE of 3892 down to 3069. This final model achieved a MAE of 3069 passengers (~6% error rate), providing reliable forecasts for the Sydney-Auckland route through 1989.
+
+**Future Iteration:**
+For future iterations of the model, I would add another layer to my model which accounts for freight traffic. The current model only accounts for passenger traffic, which is good, but adding freight traffic would get us more accurate results for the most profitable routes as these routes contain a combination of freight and passenger traffic. 
+
+I would also try different approaches to modeling. This time around, I skipped out on trying ARIMA/SARIMA modeling due to its necessary complex preprocessing, however, this form of modeling might fit our need better and yield more accurate results. I could also try different machine learning approaches such as random forest or XGBoost. Another approach could be feature engineering the basic linear regression model I created earlier. There are a lot of ways to approach this problem, and finding the best solution would be extremely exciting!
+
+**Links to Datasets:**
+[Stripped Airline Data](https://docs.google.com/spreadsheets/d/1GqoPIR0RlelQyD2ahO-qIMZQTf52uClkS62Q0L3i0yQ/edit?usp=sharing)
+[Sydney to Auckland Prophet Ready Data](https://docs.google.com/spreadsheets/d/1dfGpjfat9TC4zjblotNHUxBVf5VEK_Zas7uwPFPNeIM/edit?usp=sharing)
